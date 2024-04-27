@@ -1,0 +1,58 @@
+<main class="main">
+  <div class="content">
+    <div class="search-bar">
+      <form [formGroup]="searchForm">
+        <label>Search Address: </label>
+        <input formControlName="searchText" type="text" >
+      </form>
+    </div>
+    <div class="main-content">
+      <div class="map">
+        <google-map width="100%" height="100%" class="map"  
+          [center]="center"
+          [options]="options" 
+          (mapClick)="getLocation($event)">
+          @for (bounds of boundingBoxes; track bounds) {
+            <map-rectangle [bounds]="bounds" />
+          }
+          @for (panel of solarPanels; track panel; let idx=$index) {
+            <map-polygon [paths]="panel.getPath()" (polygonClick)="panelClick(idx)"/>
+          }
+        </google-map>
+      </div>
+      <div class="information">
+        <table>
+          <tr>
+            <td>
+              Max Panels Count:
+            </td>
+            <td>
+              {{object.maxArrayPanelsCount}}
+            </td>
+          </tr>
+          <tr>
+            <td>Solar Information</td>
+          </tr>
+          <tr>
+            <td>Center:</td>
+            <td>Lnt: {{object.solarPanel?.center?.latitude}}</td>
+            <td>Lng: {{object.solarPanel?.center?.longitude}}</td>
+          </tr>
+          <tr>
+            <td>Orientation: </td>
+            <td>{{object.solarPanel?.orientation}}</td>
+          </tr>
+          <tr>
+            <td>Segment Index:</td>
+            <td>{{object.solarPanel?.segmentIndex}}</td>
+          </tr>
+          <tr>
+            <td>Yearly Energy DcKwh: </td>
+            <td>{{object.solarPanel?.yearlyEnergyDcKwh}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<router-outlet />

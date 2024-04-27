@@ -1,0 +1,1 @@
+export const panelsPalette = ['E8EAF6', '1A237E'];

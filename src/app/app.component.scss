@@ -1,0 +1,29 @@
+.main{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.content{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+
+    .main-content{
+        width: 100%;
+        height: 100%;
+        display: inline-flex;
+        .map{
+            width: 70%;
+            height: 100%;
+        }
+        .information{
+            width: 30%;
+            height: 100%;
+        }
+    }
+}
