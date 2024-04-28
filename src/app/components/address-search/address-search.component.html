@@ -1,0 +1,11 @@
+<div class="search-bar">
+    <form [formGroup]="searchForm" class="search-form">
+        <div class="search">
+            <label for="search-text"><strong>Search Address:</strong></label>
+            <input id="search-text" placeholder="Insert your address" class="form-control" formControlName="searchText" type="text" >
+        </div>
+        <div class="actions">
+            <button class="btn btn-primary" (click)="searchEvent()">Search</button>
+        </div>
+    </form>
+</div>

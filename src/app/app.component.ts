@@ -1,15 +1,17 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { RouterOutlet } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, of, switchMap, takeUntil } from 'rxjs';
+import { Subject, of, switchMap, take } from 'rxjs';
 import * as GMAPILoader from '@googlemaps/js-api-loader';
 import { AppService } from './app.service';
 import { BuildingInsightsResponse, SolarPanel, SolarPotential } from './models/solar';
 import { createPalette, normalize, rgbToColor } from './visualize';
 import { panelsPalette } from './color';
 import { GOOGLE_API_KEY } from '../environments/environment';
+import { AddressSearchComponent } from './components/address-search/address-search.component';
+import { SolarBuildingInformationComponent } from './components/solar-building-information/solar-building-information.component';
 
 const { Loader } = GMAPILoader;
 
@@ -22,6 +24,8 @@ const { Loader } = GMAPILoader;
     HttpClientModule,
     ReactiveFormsModule,
     GoogleMapsModule,
+    AddressSearchComponent,
+    SolarBuildingInformationComponent
   ],
   providers:[
     AppService
@@ -31,7 +35,7 @@ const { Loader } = GMAPILoader;
 })
 export class AppComponent implements OnInit, OnDestroy{
   title = 'solarpoint';
-  searchForm : FormGroup;
+  
 
   object: {
     maxArrayPanelsCount? :number,
@@ -61,12 +65,9 @@ export class AppComponent implements OnInit, OnDestroy{
   private destroy$ = new Subject();
 
   constructor(
-    private fb: FormBuilder,
     private appService: AppService,
   ){
-    this.searchForm = this.fb.group({
-      searchText: ['']
-    });
+   
   }
 
   ngOnDestroy(): void {
@@ -83,30 +84,26 @@ export class AppComponent implements OnInit, OnDestroy{
       maps: loader.importLibrary('maps'),
       places: loader.importLibrary('places'),
     };
+  }
 
-    if(this.searchForm){
-      this.searchForm.valueChanges.pipe(
-        debounceTime(200),
-        distinctUntilChanged(),
-        takeUntil(this.destroy$),
-        switchMap(result => {
-            return this.appService.getLatLng(result.searchText);
-        }),
-        switchMap((_location:any) => {
-          var geometry = _location.results[0].geometry;
-          var location = { lat: geometry.location.lat, lng: geometry.location.lng};
-          this.center = location;
-          return of(location);
-        }),
-        switchMap((_location: {lat:number,lng:number})=>{
-          return this.appService.getBuildingInsights(_location);
-        })
-      ).subscribe((result:BuildingInsightsResponse)=>{
-        this.buildingInsightData = result;
-        this.solarPanels = this.drawSolarPanels(this.buildingInsightData.solarPotential);
-        this.object.maxArrayPanelsCount = this.buildingInsightData.solarPotential.maxArrayPanelsCount;
-      });
-    }
+  protected searchAddress($event:string){
+    this.appService.getLatLng($event).pipe(
+      take(1),
+      switchMap((_location:any) => {
+        var geometry = _location.results[0].geometry;
+        var location = { lat: geometry.location.lat, lng: geometry.location.lng};
+        this.center = location;
+        return of(location);
+      }),
+      switchMap((_location: {lat:number,lng:number})=>{
+        return this.appService.getBuildingInsights(_location);
+      })
+    ).subscribe((result:BuildingInsightsResponse)=>{
+      this.options.zoom = 20;
+      this.buildingInsightData = result;
+      this.solarPanels = this.drawSolarPanels(this.buildingInsightData.solarPotential);
+      this.object.maxArrayPanelsCount = this.buildingInsightData.solarPotential.maxArrayPanelsCount;
+    });
   }
 
 
@@ -146,7 +143,7 @@ export class AppComponent implements OnInit, OnDestroy{
         ),
         strokeColor: '#B0BEC5',
         strokeOpacity: 0.9,
-        strokeWeight: 1,
+        strokeWeight: 0.5,
         fillColor: palette[colorIndex],
         fillOpacity: 0.9
       });
