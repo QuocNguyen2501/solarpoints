@@ -1,4 +1,4 @@
-# Solarpoint
+# Solarpoints
 
 This project is a simple demonstration showing the simple features of the Google Solar API.
 The Google Solar API is a service focused on helping accelerate solar and energy system installations. 
