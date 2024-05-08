@@ -1,9 +1,10 @@
 <main class="main">
   <div class="content">
     <address-search (searchEventEmit)="searchAddress($event)"></address-search>
+    <segment-index [segmentIndexes]="segmentIndexes" (segmentFilterEventEmit)="segmentFilter($event)"></segment-index>
     <div class="main-content">
       <div class="map">
-        <google-map width="100%" height="100%" class="map"  
+        <google-map  width="100%" height="100%" class="map"  
           [center]="center"
           [options]="options" 
           (mapClick)="getLocation($event)">
@@ -11,7 +12,7 @@
             <map-rectangle [bounds]="bounds" />
           }
           @for (panel of solarPanels; track panel; let idx=$index) {
-            <map-polygon [paths]="panel.getPath()" (polygonClick)="panelClick(idx)"/>
+            <map-polygon [options]="panel" (polygonClick)="panelClick(idx)"/>
           }
         </google-map>
       </div>

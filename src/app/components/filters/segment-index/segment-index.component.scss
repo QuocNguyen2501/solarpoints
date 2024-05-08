@@ -1,0 +1,16 @@
+.segment-index-filter{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    .segment-index{
+        width: 50%;
+        display: inline-flex;
+        .segment-filter-label{
+            margin-right: 5px;
+        }
+        .segment-filter-dropdown{
+            width: 35%;
+        }
+    }
+
+}

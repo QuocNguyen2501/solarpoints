@@ -12,6 +12,8 @@ import { panelsPalette } from './color';
 import { GOOGLE_API_KEY } from '../environments/environment';
 import { AddressSearchComponent } from './components/address-search/address-search.component';
 import { SolarBuildingInformationComponent } from './components/solar-building-information/solar-building-information.component';
+import { data } from './sample-data/data';
+import { SegmentIndexComponent } from './components/filters/segment-index/segment-index.component';
 
 const { Loader } = GMAPILoader;
 
@@ -25,6 +27,7 @@ const { Loader } = GMAPILoader;
     ReactiveFormsModule,
     GoogleMapsModule,
     AddressSearchComponent,
+    SegmentIndexComponent,
     SolarBuildingInformationComponent
   ],
   providers:[
@@ -35,15 +38,17 @@ const { Loader } = GMAPILoader;
 })
 export class AppComponent implements OnInit, OnDestroy{
   title = 'solarpoint';
-  
 
   object: {
     maxArrayPanelsCount? :number,
     solarPanel?: SolarPanel
   } = {};
 
+  segmentIndexes: number[] = [];
+
 
   center: google.maps.LatLngLiteral = {lat: 30.4321992, lng: -97.7359108};
+
 
 
   options: google.maps.MapOptions = {
@@ -58,7 +63,7 @@ export class AppComponent implements OnInit, OnDestroy{
 
   boundingBoxes: google.maps.LatLngBoundsLiteral[] = [];
 
-  solarPanels: google.maps.Polygon[] = [];
+  solarPanels: google.maps.PolygonOptions[] = [];
 
   buildingInsightData: BuildingInsightsResponse|undefined;
 
@@ -100,10 +105,16 @@ export class AppComponent implements OnInit, OnDestroy{
       })
     ).subscribe((result:BuildingInsightsResponse)=>{
       this.options.zoom = 20;
+      // this.buildingInsightData = data;
       this.buildingInsightData = result;
-      this.solarPanels = this.drawSolarPanels(this.buildingInsightData.solarPotential);
+      this.solarPanels =  this.drawSolarPanels(this.buildingInsightData.solarPotential);
+      this.segmentIndexes = [...new Set(this.buildingInsightData.solarPotential.solarPanels.map(m=>m.segmentIndex))].sort((a,b)=>a-b);
       this.object.maxArrayPanelsCount = this.buildingInsightData.solarPotential.maxArrayPanelsCount;
     });
+  }
+
+  protected segmentFilter($event: number|undefined) {
+    this.solarPanels = [...this.drawSolarPanels(this.buildingInsightData!.solarPotential,$event)];
   }
 
 
@@ -111,15 +122,27 @@ export class AppComponent implements OnInit, OnDestroy{
     console.log($event);
   }
 
+  private previousIdx?:number;
   protected panelClick(idx:number){
     this.object.solarPanel = this.buildingInsightData!.solarPotential.solarPanels[idx];
+   
+    if(this.previousIdx){
+      this.solarPanels[this.previousIdx].fillColor= this.solarPanels[idx].fillColor;
+    }
+    this.solarPanels[idx].fillColor= '#3CB043';
+    this.previousIdx = idx;
   }
 
-  protected drawSolarPanels(solarPotential: SolarPotential){
+ 
+
+  protected drawSolarPanels(solarPotential: SolarPotential,segmentIndex?:number):google.maps.PolygonOptions[]{
     const minEnergy = solarPotential.solarPanels.slice(-1)[0].yearlyEnergyDcKwh;
     const maxEnergy = solarPotential.solarPanels[0].yearlyEnergyDcKwh;
 
     const palette = createPalette(panelsPalette).map(rgbToColor);
+
+    const latOffset = 0.00010;  // balance latitude offset
+    const lngOffset = 0.000005;  // balance longitude offset
 
     const solarPanels = solarPotential.solarPanels.map((panel) => {
       const [w, h] = [solarPotential.panelWidthMeters / 2, solarPotential.panelHeightMeters / 2];
@@ -133,20 +156,23 @@ export class AppComponent implements OnInit, OnDestroy{
       const orientation = panel.orientation == 'PORTRAIT' ? 90 : 0;
       const azimuth = solarPotential.roofSegmentStats[panel.segmentIndex].azimuthDegrees;
       const colorIndex = Math.round(normalize(panel.yearlyEnergyDcKwh, maxEnergy, minEnergy) * 255);
-      return new google.maps.Polygon({
+      
+      var polygon: google.maps.PolygonOptions = {
         paths: points.map(({ x, y }) =>
           this.libraries.geometry.__zone_symbol__value.spherical.computeOffset(
-            { lat: panel.center.latitude, lng: panel.center.longitude },
+            { lat: panel.center.latitude + latOffset, lng: panel.center.longitude+lngOffset },
             Math.sqrt(x * x + y * y),
             Math.atan2(y, x) * (180 / Math.PI) + orientation + azimuth,
           ),
         ),
-        strokeColor: '#B0BEC5',
-        strokeOpacity: 0.9,
+        strokeColor: '#FFD700',
+        strokeOpacity: 1,
         strokeWeight: 0.5,
         fillColor: palette[colorIndex],
-        fillOpacity: 0.9
-      });
+        fillOpacity: 0.9,
+        visible: segmentIndex ? panel.segmentIndex===Number(segmentIndex):true
+      };
+      return polygon;
     });
     return solarPanels;
   }

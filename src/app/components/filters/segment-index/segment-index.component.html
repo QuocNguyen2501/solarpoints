@@ -1,0 +1,11 @@
+<div class="segment-index-filter">
+    <div class="segment-index">
+      <label for="segment-filter-dropdown" class="segment-filter-label"><strong>Segment Index:</strong></label>
+      <select #segmentFilter class="segment-filter-dropdown form-control" (change)="filterSegment()">
+        <option value="">Select all</option>
+        @for(segment of segmentIndexes; track segment){
+          <option value="{{segment}}">{{segment}}</option>
+        }
+      </select>
+    </div>
+</div>
