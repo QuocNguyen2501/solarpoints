@@ -1,7 +1,7 @@
 # Solarpoints
 
 This project is a simple demonstration showing the simple features of the Google Solar API.
-The Google Solar API is a service focused on helping accelerate solar and energy system installations. 
+The Google Solar API is a service focused on helping accelerate solar and energy system installations. It is released in 20/07/2018 in the first time.
 The Solar API accepts requests for three endpoints:
 - `buildingInsights` : This service endpoint returns insights about the location, dimensions, and solar potential of a building (may not work well in VietNam).
 - `dataLayers`: This service endpoint returns URLs for raw solar information datasets for an area surrounding a location.
@@ -42,3 +42,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 Try input an address: `12545 Riata Vista Cir, Austin, TX 78727, United States`
 
 ![alt text](image.png)
+
+## Donation
+If you are interested with my code, you can donate me a coffee via <a href="https://buymeacoffee.com/quocng" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a> . With $5, I have a good breakfast with delicious coffee, it is a great motivation for me to write more code in the future. Thank you.
+
