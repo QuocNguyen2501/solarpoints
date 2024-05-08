@@ -1,6 +1,13 @@
 # Solarpoint
 
 This project is a simple demonstration showing the simple features of the Google Solar API.
+The Google Solar API is a service focused on helping accelerate solar and energy system installations. 
+The Solar API accepts requests for three endpoints:
+- `buildingInsights` : This service endpoint returns insights about the location, dimensions, and solar potential of a building (may not work well in VietNam).
+- `dataLayers`: This service endpoint returns URLs for raw solar information datasets for an area surrounding a location.
+- `geoTiff`: This endpoint fetches rasters with encoded solar information, including a digital surface model, an aerial image, annual and monthly flux maps, and hourly shade.
+
+Currently, this project's only using a small part of `buildingInsights` data to display panels and filter them by segment indexes.
 
 ## Install node_modules
 
