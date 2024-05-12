@@ -1,0 +1,12 @@
+<div class="map">
+    <google-map  width="100%" height="100%" class="map"  
+        [center]="mapCenter!"
+        [options]="options" >
+        @for (bounds of boundingBoxes; track bounds) {
+        <map-rectangle [bounds]="bounds" />
+        }
+        @for (panel of solarPanels; track panel; let idx=$index) {
+        <map-polygon [options]="panel" (polygonClick)="panelClick(idx)"/>
+        }
+    </google-map>
+</div>

@@ -1,0 +1,40 @@
+<ng-container *ngIf="solarPanel">
+    <div class="row">
+      <div class="col-12">
+        Solar Information
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        Location
+      </div>
+      <div class="col-4">
+        Lat
+      </div>
+      <div class="col-4">
+        Lng
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+      </div>
+      <div class="col-5">
+        {{solarPanel!.center!.latitude}}
+      </div>
+      <div class="col-4">
+        {{solarPanel!.center!.longitude}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">Orientation</div>
+      <div class="col-8">{{solarPanel!.orientation}}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Segment Index</div>
+      <div class="col-8">{{solarPanel!.segmentIndex}}</div>
+    </div>
+    <div class="row">
+      <div class="col-4">Yearly Energy DcKwh</div>
+      <div class="col-8">{{solarPanel!.yearlyEnergyDcKwh}}</div>
+    </div>
+</ng-container>

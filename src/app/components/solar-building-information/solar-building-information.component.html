@@ -1,54 +1,18 @@
 <ng-container class="information-part">
   <div class="information" >
       <div class="container">
-        <div class="row" *ngIf="object.maxArrayPanelsCount">
-          <div class="col-4">
-            Max Panels Count:
-          </div>
-          <div class="col-8">
-            {{object.maxArrayPanelsCount}}
+        <div class="card" *ngIf="object.maxArrayPanelsCount">
+          <div class="card-body">
+            <h5 class="card-title">
+              <img src="/assets/panel-solar-icon.svg" class="icon-title"/>
+              Max Panels Count:
+            </h5>
+            <div class="card-text">
+              {{object.maxArrayPanelsCount}}
+            </div>
           </div>
         </div>
-        <ng-container *ngIf="object.solarPanel">
-          <div class="row">
-            <div class="col-12">
-              Solar Information
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4">
-              Location
-            </div>
-            <div class="col-4">
-              Lat
-            </div>
-            <div class="col-4">
-              Lng
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-3">
-            </div>
-            <div class="col-5">
-              {{object.solarPanel!.center!.latitude}}
-            </div>
-            <div class="col-4">
-              {{object.solarPanel!.center!.longitude}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-4">Orientation</div>
-            <div class="col-8">{{object.solarPanel!.orientation}}</div>
-          </div>
-          <div class="row">
-            <div class="col-4">Segment Index</div>
-            <div class="col-8">{{object.solarPanel!.segmentIndex}}</div>
-          </div>
-          <div class="row">
-            <div class="col-4">Yearly Energy DcKwh</div>
-            <div class="col-8">{{object.solarPanel!.yearlyEnergyDcKwh}}</div>
-          </div>
-        </ng-container>
+        <solar-panel [solarPanel]="object.solarPanel"></solar-panel>
       </div>
   </div>
 </ng-container>
