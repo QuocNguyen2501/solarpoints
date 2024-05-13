@@ -3,13 +3,14 @@
     padding: 10px;
     margin-bottom: 5px;
     .segment-index{
-        width: 50%;
+        width: 100%;
         display: inline-flex;
         .segment-filter-label{
             margin-right: 5px;
+            width: 130px;
         }
         .segment-filter-dropdown{
-            width: 35%;
+            width: 62%;
         }
     }
 

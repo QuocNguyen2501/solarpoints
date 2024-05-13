@@ -1,12 +1,13 @@
 <main class="main">
   <div class="content">
-    <address-search (searchEventEmit)="searchAddress($event)"></address-search>
-    <segment-index [segmentIndexes]="segmentIndexes" (segmentFilterEventEmit)="segmentFilter($event)"></segment-index>
-    <div class="main-content">
-      <map [mapCenter]="center" 
+      <map 
+      [mapCenter]="center"
       [options]="options" 
-      [boundingBoxes]="boundingBoxes" [solarPanels]="solarPanels"
-      (panelClickEmitter)="panelClick($event)"></map>
+      [solarPanels]="solarPanels"
+      [boundingBoxes]="boundingBoxes"></map>
+    <div class="main-content">
+      <address-search (searchEventEmit)="searchAddress($event)"></address-search>
+      <segment-index [segmentIndexes]="segmentIndexes" (segmentFilterEventEmit)="segmentFilter($event)"></segment-index>
       <solar-building-information [object]="object"></solar-building-information>
     </div>
   </div>
